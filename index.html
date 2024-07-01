@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <!-- تضمين Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: black; /* تغيير الخلفية إلى الأسود */
+            overflow: hidden; /* لإخفاء شريط التمرير */
+            position: relative;
+        }
+     
+        .text-4xl{
+           position: relative;
+           top: -70px;
+          font-size: 8rem;}
+
+       .text-3xl{
+           background: linear-gradient(90deg, #db2461, #64d9ee);
+           position: relative;
+           top: -70px;
+           }
+        h1 {
+            background: linear-gradient(90deg, #db2461, #64d9ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .custom-input {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: 1px solid #bd0707;
+            text-align: center;
+            width: 800px;
+            position: relative;
+            top: -70px;
+        }
+
+        .custom-button {
+            background-color: rgba(28, 236, 236, 0.5);
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+            transition: background-color 0.3s ease;
+            position: relative;
+            top: -70px;
+        }
+
+        .custom-button:hover {
+            background-color: #00ffff;
+        }
+
+        .question-mark {
+            font-size: 2rem; /* حجم علامات الاستفهام */
+            position: absolute;
+            animation: float 5s infinite; /* التحريك */
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        /* ألوان مختلفة لعلامات الاستفهام */
+        .q1 { color: #db2461; }
+        .q2 { color: #64d9ee; }
+        .q3 { color: #f0e130; }
+        .q4 { color: #ec528c; }
+        .q5 { color: #90c7ec; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function validateInput() {
+            var inputElement = document.getElementById("nameInput");
+            var input = inputElement.value.trim();
+
+            if (input === "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter your name!',
+                });
+                return;
+            }
+
+            if (input === "Mostafa*1234") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome Admin!',
+                    text: 'Redirecting to admin page...',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    didClose: () => window.location.href = "admin.html"
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome!',
+                    text: 'Redirecting to contact page...',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    didClose: () => window.location.href = "contact.html"
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const colors = ['q1', 'q2', 'q3', 'q4', 'q5'];
+            for (let i = 0; i < 100; i++) { // عدد علامات الاستفهام
+                const mark = document.createElement('div');
+                mark.classList.add('question-mark', colors[Math.floor(Math.random() * colors.length)]);
+                mark.innerHTML = '?';
+                mark.style.top = Math.random() * 100 + 'vh';
+                mark.style.left = Math.random() * 100 + 'vw';
+                mark.style.animationDelay = Math.random() * 5 + 's'; // لتوزيع توقيت الحركة
+                document.body.appendChild(mark);
+            }
+        });
+    </script>
+</head>
+
+<body class="flex flex-col items-center justify-center min-h-screen relative">
+   
+        <h1 class="text-4xl sm:text-5xl md:text-6xl mt-8 mb-8  ">QuizTime</h1>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl mb-8">Welcome, Good luck</h2>
+        <div class="mb-6">
+            <input type="text" id="nameInput" class="custom-input w-full max-w-sm" placeholder="Enter your name">
+        </div>
+        
+            <button class="custom-button w-full max-w-xs" onclick="validateInput()">Login</button>
+      
+   
+</body>
+
+</html>
