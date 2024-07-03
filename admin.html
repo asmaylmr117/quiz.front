@@ -51,7 +51,7 @@
     };
 
     try {
-        const response = await fetch('https://quiz-back-rose.vercel.app/questions', {
+        const response = await fetch('https://quiz-backend-rose.vercel.app/questions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,7 +74,7 @@
 document.getElementById('deleteAllQuestions').addEventListener('click', async () => {
     if (confirm('Are you sure you want to delete all questions?')) {
         try {
-            const response = await fetch('https://quiz-back-rose.vercel.app/questions', {
+            const response = await fetch('https://quiz-backend-rose.vercel.app/questions', {
                 method: 'DELETE'
             });
 
