@@ -35,7 +35,7 @@
       
               async function fetchQuizData() {
                   try {
-                      const response = await fetch('https://quiz-back-rose.vercel.app');
+                      const response = await fetch('https://quiz-back-rose.vercel.app/questions');
                       quizData = await response.json();
                       console.log('Loaded quiz data from MongoDB Atlas:', quizData);
                   } catch (error) {
