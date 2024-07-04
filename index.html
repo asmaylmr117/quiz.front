@@ -9,28 +9,31 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-color: black; /* تغيير الخلفية إلى الأسود */
-            overflow: hidden; /* لإخفاء شريط التمرير */
-            position: relative;
+            background-color: black;
+            overflow: hidden;
         }
-     
-        .text-4xl{
-           position: relative;
-           top: -70px;
-          font-size: 8rem;}
-
-       .text-3xl{
-           background: linear-gradient(90deg, #db2461, #64d9ee);
-           position: relative;
-           top: -70px;
-           }
+        
         h1 {
             background: linear-gradient(90deg, #db2461, #64d9ee);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-size: 10vw;
+            text-align: center;
+            margin-top: 8vh;
+        }
+
+        h2 {
+            background: linear-gradient(90deg, #db2461, #64d9ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 5vw;
+            text-align: center;
+            margin-bottom: 8vh;
         }
 
         .custom-input {
@@ -40,9 +43,13 @@
             border-radius: 5px;
             border: 1px solid #bd0707;
             text-align: center;
-            width: 800px;
+            width: 160%;
+            max-width: 400px;
+            margin: 0 auto;
+            margin-bottom: 40px;
             position: relative;
-            top: -70px;
+            left:-70px;
+            top: -20px;
         }
 
         .custom-button {
@@ -54,8 +61,10 @@
             cursor: pointer;
             color: #fff;
             transition: background-color 0.3s ease;
+            width: 190px;
+            max-width: 170px;
             position: relative;
-            top: -70px;
+            top: -20px;
         }
 
         .custom-button:hover {
@@ -63,14 +72,13 @@
         }
 
         .question-mark {
-            font-size: 2rem; /* حجم علامات الاستفهام */
+            font-size: 2rem;
             position: absolute;
-            animation: float 5s infinite; /* التحريك */
+            animation: float 5s infinite;
             opacity: 0.7;
             z-index: 0;
         }
 
-        /* ألوان مختلفة لعلامات الاستفهام */
         .q1 { color: #db2461; }
         .q2 { color: #64d9ee; }
         .q3 { color: #f0e130; }
@@ -78,15 +86,72 @@
         .q5 { color: #90c7ec; }
 
         @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0);
-            }
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        #developer-section {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #220de26b;
+            display: none;
+            text-align: right;
+            max-width: 50%;
+            margin: 10px auto;
+            width: 50%;
+            position: relative;
+        }
+       #about-app-section {
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #220de26b;
+            display: none;
+            text-align: right;
+            max-width: 80%;
+            margin: 10px auto;
+            width: 100%;
+            position: relative;
+        }
+
+        .icon-link {
+            display: inline-block;
+            margin: 5px;
+            font-size: 24px;
+            color: #e7dfdf;
+            text-decoration: none;
+        }
+
+        .icon-link:hover {
+            color: #007BFF;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 10px;
+            max-width: 100px;
+            height: auto;
+        }
+
+        #developer-btn, #about-app-btn {
+            color: #154de9;
+            background-color: #c7d0d6d5;
+            margin: 10px;
+        }
+
+        #developer-btn:hover, #about-app-btn:hover {
+            background-color: #f3e9e975;
+        }
+
+        p {
+            color: white;
+        }
+        
+        .mo {
+            display: block;
+            margin: 0 auto 10px;
+            max-width: 200px;
+            height: auto;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.6/dist/sweetalert2.all.min.js"></script>
@@ -123,34 +188,89 @@
                     didClose: () => window.location.href = "contact.html"
                 });
             }
+
+            document.getElementById('developer-section').style.display = 'none';
+            document.getElementById('about-app-section').style.display = 'none';
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             const colors = ['q1', 'q2', 'q3', 'q4', 'q5'];
-            for (let i = 0; i < 100; i++) { // عدد علامات الاستفهام
+            for (let i = 0; i < 100; i++) {
                 const mark = document.createElement('div');
                 mark.classList.add('question-mark', colors[Math.floor(Math.random() * colors.length)]);
                 mark.innerHTML = '?';
                 mark.style.top = Math.random() * 100 + 'vh';
                 mark.style.left = Math.random() * 100 + 'vw';
-                mark.style.animationDelay = Math.random() * 5 + 's'; // لتوزيع توقيت الحركة
+                mark.style.animationDelay = Math.random() * 5 + 's';
                 document.body.appendChild(mark);
             }
+
+            document.getElementById('developer-btn').addEventListener('click', function() {
+                var devSection = document.getElementById('developer-section');
+                var aboutSection = document.getElementById('about-app-section');
+                if (devSection.style.display === "none" || devSection.style.display === "") {
+                    devSection.style.display = "block";
+                    aboutSection.style.display = "none";
+                } else {
+                    devSection.style.display = "none";
+                }
+            });
+
+            document.getElementById('about-app-btn').addEventListener('click', function() {
+                var aboutSection = document.getElementById('about-app-section');
+                var devSection = document.getElementById('developer-section');
+                if (aboutSection.style.display === "none" || aboutSection.style.display === "") {
+                    aboutSection.style.display = "block";
+                    devSection.style.display = "none";
+                } else {
+                    aboutSection.style.display = "none";
+                }
+            });
         });
     </script>
 </head>
-
 <body class="flex flex-col items-center justify-center min-h-screen relative">
-   
-        <h1 class="text-4xl sm:text-5xl md:text-6xl mt-8 mb-8  ">QuizTime</h1>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl mb-8">Welcome, Good luck</h2>
-        <div class="mb-6">
-            <input type="text" id="nameInput" class="custom-input w-full max-w-sm" placeholder="Enter your name">
-        </div>
-        
-            <button class="custom-button w-full max-w-xs" onclick="validateInput()">Login</button>
-      
-   
-</body>
+    <div class="flex justify-center items-center space-x-4">
+        <button id="developer-btn" class="custom-button">Developer</button>
+        <button id="about-app-btn" class="custom-button">About App</button>
+    </div>
 
+    <div id="developer-section">
+        <img src="mostafa.PNG" alt="شعار" class="logo">
+        <a href="https://www.facebook.com/mostafa.enani.71" target="_blank" class="icon-link">
+            <i class="fab fa-facebook"></i> Facebook
+        </a>
+
+        <a href="https://github.com/asmaylmr117" target="_blank" class="icon-link">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="https://wa.me/+201066915691" target="_blank" class="icon-link">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://www.linkedin.com/in/mostafa-enany-657228259?trk=contact-info" target="_blank" class="icon-link">
+            <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+    </div>
+
+    <div id="about-app-section">
+        <p>This quiz app application depends on:
+            <br>1 - Admin: responsible for adding questions and has a unique name to access the add questions page.
+            <img src="admin.PNG" class="mo" style="border: 2px solid rgba(37, 56, 224, 0.301);">
+            <br>2 - Users: tested with questions added by the admin, and their results are displayed after completing the answers.
+        </p>
+        <div class="flex justify-center space-x-4 mt-4">
+            <img src="users.PNG" class="w-20 h-auto"> <!-- ضبط العرض -->
+            <img src="users.1.PNG" class="w-20 h-auto">
+            <img src="users.2.PNG" class="w-40 h-auto">
+        </div>
+    </div>
+
+    <h1>QuizTime</h1>
+    <h2>Welcome, Good luck</h2>
+    <div>
+        <input type="text" id="nameInput" class="custom-input" placeholder="Enter your name">
+    </div>
+    <button class="custom-button" onclick="validateInput()">Login</button>
+
+</body>
 </html>
