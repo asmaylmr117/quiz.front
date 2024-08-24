@@ -12,6 +12,8 @@
     <div class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div id="quiz" class="text-left"></div>
         <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
+            <button id="back-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
+                onclick="loadPreviousQuestion()">Back</button>
             <button id="next-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
                 onclick="loadNextQuestion()">Next Question</button>
             <button id="start-quiz-btn"
@@ -21,110 +23,129 @@
     </div>
     <script>
         let quizData = [];
-              let currentQuiz = 0;
-              let score = 0;
-      
-              async function startQuiz() {
-                  currentQuiz = 0;
-                  score = 0;
-                  await fetchQuizData();
-                  document.getElementById('start-quiz-btn').classList.add('hidden');
-                  document.getElementById('next-btn').classList.remove('hidden');
-                  loadQuiz();
-              }
-      
-              async function fetchQuizData() {
-                  try {
-                      const response = await fetch('https://quiz-backend-rose.vercel.app/questions');
-                      quizData = await response.json();
-                      console.log('Loaded quiz data from MongoDB Atlas:', quizData);
-                  } catch (error) {
-                      console.error('Error fetching quiz data:', error);
-                  }
-              }
-      
-              function loadQuiz() {
-                  const quiz = document.getElementById('quiz');
-                  if (quizData.length === 0) {
-                      quiz.innerHTML = '<h2>No questions available yet</h2>';
-                      document.getElementById('next-btn').classList.add('hidden');
-                      return;
-                  }
-      
-                  const currentQuizData = quizData[currentQuiz];
-                  quiz.innerHTML = `
-                      <h2>${currentQuizData.question}</h2>
-                      <div class="space-y-2">
-                          <label class="block">
-                              <input class="mr-2 leading-tight" type="radio" name="answer" value="a">
-                              <span class="text-white">${currentQuizData.a}</span>
-                          </label>
-                          <label class="block">
-                              <input class="mr-2 leading-tight" type="radio" name="answer" value="b">
-                              <span class="text-white">${currentQuizData.b}</span>
-                          </label>
-                          <label class="block">
-                              <input class="mr-2 leading-tight" type="radio" name="answer" value="c">
-                              <span class="text-white">${currentQuizData.c}</span>
-                          </label>
-                          <label class="block">
-                              <input class="mr-2 leading-tight" type="radio" name="answer" value="d">
-                              <span class="text-white">${currentQuizData.d}</span>
-                          </label>
-                      </div>
-                  `;
-                  document.getElementById('next-btn').classList.remove('hidden');
-              }
-      
-              function loadNextQuestion() {
-                  const answerEls = document.querySelectorAll('input[name="answer"]');
-                  let selectedAnswer;
-      
-                  answerEls.forEach(answerEl => {
-                      if (answerEl.checked) {
-                          selectedAnswer = answerEl.value;
-                      }
-                  });
-      
-                  if (selectedAnswer) {
-                      if (selectedAnswer === quizData[currentQuiz].correct) {
-                          score++;
-                      }
-                      currentQuiz++;
-                      if (currentQuiz < quizData.length) {
-                          loadQuiz();
-                      } else {
-                          showResults();
-                      }
-                  } else {
-                      alert('Please choose an answer before moving on to the next question');
-                  }
-              }
-      
-              function showResults() {
-                  const quiz = document.getElementById('quiz');
-                  quiz.innerHTML = `
-                      <h2>You have answered ${score} out of ${quizData.length} questions correctly</h2>
-                      <div class="mt-4 space-x-4">
-                          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                              onclick="location.reload()">Reload</button>
-                          <button id="exit-btn-final"
-                              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                              onclick="exitQuiz()">Exit</button>
-                      </div>
-                  `;
-                  document.getElementById('next-btn').classList.add('hidden');
-              }
-      
-              window.onload = async function () {
-                  await fetchQuizData();
-              };
-      
-              function exitQuiz() {
-                  window.close();
-                  window.location.href = 'index.html';
-              }
-          </script>
+        let currentQuiz = 0;
+        let score = 0;
+
+        async function startQuiz() {
+            currentQuiz = 0;
+            score = 0;
+            await fetchQuizData();
+            document.getElementById('start-quiz-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('back-btn').classList.remove('hidden'); // إظهار زر "Back"
+            loadQuiz();
+        }
+
+        async function fetchQuizData() {
+            try {
+                const response = await fetch('https://quiz-backend-rose.vercel.app/questions');
+                quizData = await response.json();
+                console.log('Loaded quiz data from MongoDB Atlas:', quizData);
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        }
+
+        function loadQuiz() {
+            const quiz = document.getElementById('quiz');
+            if (quizData.length === 0) {
+                quiz.innerHTML = '<h2>No questions available yet</h2>';
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('back-btn').classList.add('hidden'); // إخفاء زر "Back" عند عدم وجود أسئلة
+                return;
+            }
+
+            const currentQuizData = quizData[currentQuiz];
+            quiz.innerHTML = `
+                <h2>${currentQuizData.question}</h2>
+                <div class="space-y-2">
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="a">
+                        <span class="text-white">${currentQuizData.a}</span>
+                    </label>
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="b">
+                        <span class="text-white">${currentQuizData.b}</span>
+                    </label>
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="c">
+                        <span class="text-white">${currentQuizData.c}</span>
+                    </label>
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="d">
+                        <span class="text-white">${currentQuizData.d}</span>
+                    </label>
+                </div>
+            `;
+            document.getElementById('next-btn').classList.remove('hidden');
+
+            // إظهار أو إخفاء زر "Back" بناءً على السؤال الحالي
+            if (currentQuiz > 0) {
+                document.getElementById('back-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('back-btn').classList.add('hidden');
+            }
+        }
+
+        function loadNextQuestion() {
+            const answerEls = document.querySelectorAll('input[name="answer"]');
+            let selectedAnswer;
+
+            answerEls.forEach(answerEl => {
+                if (answerEl.checked) {
+                    selectedAnswer = answerEl.value;
+                }
+            });
+
+            if (selectedAnswer) {
+                if (selectedAnswer === quizData[currentQuiz].correct) {
+                    score++;
+                }
+                currentQuiz++;
+                if (currentQuiz < quizData.length) {
+                    loadQuiz();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Please choose an answer before moving on to the next question');
+            }
+        }
+
+        function loadPreviousQuestion() {
+            if (currentQuiz > 0) {
+                currentQuiz--;
+                loadQuiz();
+            } else {
+                alert('There is no previous question.');
+            }
+        }
+
+        function showResults() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = `
+                <h2>You have answered ${score} out of ${quizData.length} questions correctly</h2>
+                <div class="mt-4 space-x-4">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onclick="location.reload()">Reload</button>
+                    <button id="exit-btn-final"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onclick="exitQuiz()">Exit</button>
+                </div>
+            `;
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('back-btn').classList.add('hidden');
+        }
+
+        window.onload = async function () {
+            await fetchQuizData();
+        };
+
+        function exitQuiz() {
+            window.close();
+            window.location.href = 'index.html';
+        }
+    </script>
 </body>
 
 </html>
