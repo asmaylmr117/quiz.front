@@ -6,9 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-blue-900 text-white min-h-screen flex justify-center items-center">
+<body class="bg-blue-900 text-white min-h-screen flex justify-center items-center relative">
     <div class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div id="quiz" class="text-left"></div>
         <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
@@ -21,6 +39,10 @@
                 onclick="startQuiz()">Start Quiz</button>
         </div>
     </div>
+
+    <!-- عناصر الزينة -->
+    <div id="confetti-container" class="hidden"></div>
+
     <script>
         let quizData = [];
         let currentQuiz = 0;
@@ -32,7 +54,7 @@
             await fetchQuizData();
             document.getElementById('start-quiz-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
-            document.getElementById('back-btn').classList.remove('hidden'); // إظهار زر "Back"
+            document.getElementById('back-btn').classList.remove('hidden');
             loadQuiz();
         }
 
@@ -51,7 +73,7 @@
             if (quizData.length === 0) {
                 quiz.innerHTML = '<h2>No questions available yet</h2>';
                 document.getElementById('next-btn').classList.add('hidden');
-                document.getElementById('back-btn').classList.add('hidden'); // إخفاء زر "Back" عند عدم وجود أسئلة
+                document.getElementById('back-btn').classList.add('hidden');
                 return;
             }
 
@@ -79,7 +101,6 @@
             `;
             document.getElementById('next-btn').classList.remove('hidden');
 
-            // إظهار أو إخفاء زر "Back" بناءً على السؤال الحالي
             if (currentQuiz > 0) {
                 document.getElementById('back-btn').classList.remove('hidden');
             } else {
@@ -135,6 +156,33 @@
             `;
             document.getElementById('next-btn').classList.add('hidden');
             document.getElementById('back-btn').classList.add('hidden');
+
+            // تحقق إذا كانت جميع الإجابات صحيحة لعرض الزينة
+            if (score === quizData.length) {
+                showConfetti();
+            } else {
+                hideConfetti();
+            }
+        }
+
+        function showConfetti() {
+            const confettiContainer = document.getElementById('confetti-container');
+            confettiContainer.classList.remove('hidden');
+
+            // إنشاء العناصر للزينة
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        function hideConfetti() {
+            const confettiContainer = document.getElementById('confetti-container');
+            confettiContainer.classList.add('hidden');
+            confettiContainer.innerHTML = ''; // إزالة جميع عناصر الزينة
         }
 
         window.onload = async function () {
