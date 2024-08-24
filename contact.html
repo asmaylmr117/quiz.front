@@ -9,15 +9,16 @@
     <style>
         .confetti {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 12px; /* حجم الزينة */
+            height: 12px; /* حجم الزينة */
             background-color: red;
-            animation: confetti-fall 3s linear infinite;
+            animation: confetti-fall 5s linear infinite;
+            opacity: 0.8; /* جعل الزينة شبه شفافة */
         }
 
         @keyframes confetti-fall {
             0% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(-100vh) rotate(0deg); /* بداية من أعلى الصفحة */
             }
             100% {
                 transform: translateY(100vh) rotate(720deg);
@@ -26,7 +27,7 @@
     </style>
 </head>
 
-<body class="bg-blue-900 text-white min-h-screen flex justify-center items-center relative">
+<body class="bg-blue-900 text-white min-h-screen flex justify-center items-center relative overflow-hidden">
     <div class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div id="quiz" class="text-left"></div>
         <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
@@ -169,12 +170,13 @@
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.remove('hidden');
 
-            // إنشاء العناصر للزينة
-            for (let i = 0; i < 100; i++) {
+            // زيادة عدد عناصر الزينة إلى 200 لجعلها أكثر كثافة
+            for (let i = 0; i < 200; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.left =` ${Math.random() * 100}%`;
                 confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDelay =` ${Math.random() * 3}s`; // تأخير متنوع لظهور الزينة
                 confettiContainer.appendChild(confetti);
             }
         }
