@@ -47,11 +47,11 @@
     <script>
         let quizData = [];
         let currentQuiz = 0;
-        let score = 0;
+        let answers = [];
 
         async function startQuiz() {
             currentQuiz = 0;
-            score = 0;
+            answers = [];
             await fetchQuizData();
             document.getElementById('start-quiz-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
@@ -83,19 +83,19 @@
                 <h2>${currentQuizData.question}</h2>
                 <div class="space-y-2">
                     <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="a">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="a" ${answers[currentQuiz] === 'a' ? 'checked' : ''}>
                         <span class="text-white">${currentQuizData.a}</span>
                     </label>
                     <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="b">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="b" ${answers[currentQuiz] === 'b' ? 'checked' : ''}>
                         <span class="text-white">${currentQuizData.b}</span>
                     </label>
                     <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="c">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="c" ${answers[currentQuiz] === 'c' ? 'checked' : ''}>
                         <span class="text-white">${currentQuizData.c}</span>
                     </label>
                     <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="d">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="d" ${answers[currentQuiz] === 'd' ? 'checked' : ''}>
                         <span class="text-white">${currentQuizData.d}</span>
                     </label>
                 </div>
@@ -110,19 +110,9 @@
         }
 
         function loadNextQuestion() {
-            const answerEls = document.querySelectorAll('input[name="answer"]');
-            let selectedAnswer;
-
-            answerEls.forEach(answerEl => {
-                if (answerEl.checked) {
-                    selectedAnswer = answerEl.value;
-                }
-            });
-
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
             if (selectedAnswer) {
-                if (selectedAnswer === quizData[currentQuiz].correct) {
-                    score++;
-                }
+                answers[currentQuiz] = selectedAnswer.value;
                 currentQuiz++;
                 if (currentQuiz < quizData.length) {
                     loadQuiz();
@@ -144,6 +134,13 @@
         }
 
         function showResults() {
+            let score = 0;
+            answers.forEach((answer, index) => {
+                if (answer === quizData[index].correct) {
+                    score++;
+                }
+            });
+
             const quiz = document.getElementById('quiz');
             quiz.innerHTML = `
                 <h2>You have answered ${score} out of ${quizData.length} questions correctly</h2>
@@ -170,13 +167,16 @@
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.remove('hidden');
 
+            // إزالة أي زينة سابقة للتأكد من عدم وجود زينة غير مرغوب فيها
+            confettiContainer.innerHTML = '';
+
             // زيادة عدد عناصر الزينة إلى 200 لجعلها أكثر كثافة
             for (let i = 0; i < 200; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 confetti.style.left =` ${Math.random() * 100}%`;
                 confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                confetti.style.animationDelay =` ${Math.random() * 3}s`; // تأخير متنوع لظهور الزينة
+                confetti.style.animationDelay = `${Math.random() * 3}s`; // تأخير متنوع لظهور الزينة
                 confettiContainer.appendChild(confetti);
             }
         }
