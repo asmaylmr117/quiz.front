@@ -20,7 +20,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 12vw;
+            font-size: 11vw;
             text-align: center;
             margin-top: 8vh;
         }
@@ -78,8 +78,7 @@
         .q1 { color: #db2461; }
         .q2 { color: #64d9ee; }
         .q3 { color: #f0e130; }
-        .q4 { color: #ec528c; }
-        .q5 { color: #90c7ec; }
+       
 
         @keyframes float {
             0% { transform: translateY(0); }
@@ -190,7 +189,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            const colors = ['q1', 'q2', 'q3', 'q4', 'q5'];
+            const colors = ['q1', 'q2', 'q3'];
             for (let i = 0; i < 100; i++) {
                 const mark = document.createElement('div');
                 mark.classList.add('question-mark', colors[Math.floor(Math.random() * colors.length)]);
