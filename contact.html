@@ -58,15 +58,17 @@
         let quizData = [];
         let currentQuiz = 0;
         let answers = [];
+        let reviewingAnswers = false;  // متغير لتحديد حالة مراجعة الإجابات
 
         async function startQuiz() {
             currentQuiz = 0;
             answers = [];
+            reviewingAnswers = false;  // إعادة التعيين إلى الوضع الطبيعي
             await fetchQuizData();
             document.getElementById('start-quiz-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
             document.getElementById('back-btn').classList.remove('hidden');
-            document.getElementById('back-answer-btn').classList.add('hidden'); // إخفاء زر Back Answer عند بدء الاختبار
+            document.getElementById('back-answer-btn').classList.add('hidden');
             loadQuiz();
         }
 
@@ -123,6 +125,14 @@
         }
 
         function loadNextQuestion() {
+            if (reviewingAnswers) {  // إذا كان في وضع مراجعة الإجابات
+                if (currentQuiz < quizData.length - 1) {
+                    currentQuiz++;
+                    showPreviousAnswers();
+                }
+                return;
+            }
+
             const selectedAnswer = document.querySelector('input[name="answer"]:checked');
             if (selectedAnswer) {
                 answers[currentQuiz] = selectedAnswer.value;
@@ -140,7 +150,11 @@
         function loadPreviousQuestion() {
             if (currentQuiz > 0) {
                 currentQuiz--;
-                loadQuiz();
+                if (reviewingAnswers) {
+                    showPreviousAnswers();
+                } else {
+                    loadQuiz();
+                }
             } else {
                 alert('There is no previous question.');
             }
@@ -177,11 +191,11 @@
         }
 
         function showPreviousAnswers() {
+            reviewingAnswers = true;  // تفعيل وضع مراجعة الإجابات
             const quiz = document.getElementById('quiz');
             const feedbackContainer = document.getElementById('answer-feedback');
 
             const currentQuizData = quizData[currentQuiz];
-
             quiz.innerHTML = `
                 <h2>${currentQuizData.question}</h2>
                 <div class="space-y-2">
@@ -204,46 +218,49 @@
                 </div>
             `;
 
-            // عرض علامة صح أو خطأ بناءً على الإجابة
-            if (answers[currentQuiz] === quizData[currentQuiz].correct) {
-                feedbackContainer.classList.remove('hidden');
+            // تحديد الإجابة الصحيحة
+            feedbackContainer.classList.remove('hidden');
+            if (answers[currentQuiz] === currentQuizData.correct) {
                 document.getElementById('correct-mark').style.display = 'inline';
                 document.getElementById('wrong-mark').style.display = 'none';
             } else {
-                feedbackContainer.classList.remove('hidden');
                 document.getElementById('correct-mark').style.display = 'none';
                 document.getElementById('wrong-mark').style.display = 'inline';
             }
+
+            if (currentQuiz === 0) {
+                document.getElementById('back-btn').classList.add('hidden');
+            } else {
+                document.getElementById('back-btn').classList.remove('hidden');
+            }
+
+            if (currentQuiz === quizData.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+            }
+        }
+
+        function exitQuiz() {
+            location.reload(); // إعادة تحميل الصفحة لإعادة تشغيل الاختبار من البداية
         }
 
         function showConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.remove('hidden');
-            confettiContainer.innerHTML = '';
-
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                confetti.style.left = `${Math.random() * 100}%`;
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                confetti.style.animationDelay = `${Math.random() * 3}s`;
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
                 confettiContainer.appendChild(confetti);
             }
         }
 
         function hideConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
+            confettiContainer.innerHTML = ''; // إزالة كل العناصر لإيقاف المؤثر
             confettiContainer.classList.add('hidden');
-            confettiContainer.innerHTML = '';
-        }
-
-        window.onload = async function () {
-            await fetchQuizData();
-        };
-
-        function exitQuiz() {
-            window.close();
-            window.location.href = 'index.html';
         }
     </script>
 </body>
