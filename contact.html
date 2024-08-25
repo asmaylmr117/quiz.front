@@ -9,20 +9,26 @@
     <style>
         .confetti {
             position: absolute;
-            width: 12px; /* حجم الزينة */
-            height: 12px; /* حجم الزينة */
+            width: 12px;
+            height: 12px;
             background-color: red;
             animation: confetti-fall 5s linear infinite;
-            opacity: 0.8; /* جعل الزينة شبه شفافة */
+            opacity: 0.8;
         }
 
         @keyframes confetti-fall {
             0% {
-                transform: translateY(-100vh) rotate(0deg); /* بداية من أعلى الصفحة */
+                transform: translateY(-100vh) rotate(0deg);
             }
+
             100% {
                 transform: translateY(100vh) rotate(720deg);
             }
+        }
+
+        #correct-mark,
+        #wrong-mark {
+            display: none;
         }
     </style>
 </head>
@@ -30,18 +36,22 @@
 <body class="bg-blue-900 text-white min-h-screen flex justify-center items-center relative overflow-hidden">
     <div class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div id="quiz" class="text-left"></div>
+        <div id="answer-feedback" class="mt-2 hidden">
+            <span id="correct-mark" class="text-green-500">&#10003;</span>
+            <span id="wrong-mark" class="text-red-500">&#10007;</span>
+        </div>
         <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
             <button id="back-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
                 onclick="loadPreviousQuestion()">Back</button>
             <button id="next-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
                 onclick="loadNextQuestion()">Next Question</button>
-            <button id="start-quiz-btn"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            <button id="start-quiz-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onclick="startQuiz()">Start Quiz</button>
+            <button id="back-answer-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
+                onclick="showAnswers()">Back Answer</button>
         </div>
     </div>
 
-    <!-- عناصر الزينة -->
     <div id="confetti-container" class="hidden"></div>
 
     <script>
@@ -107,6 +117,8 @@
             } else {
                 document.getElementById('back-btn').classList.add('hidden');
             }
+
+            document.getElementById('answer-feedback').classList.add('hidden'); // إخفاء العلامات عند تحميل سؤال جديد
         }
 
         function loadNextQuestion() {
@@ -154,8 +166,8 @@
             `;
             document.getElementById('next-btn').classList.add('hidden');
             document.getElementById('back-btn').classList.add('hidden');
+            document.getElementById('back-answer-btn').classList.remove('hidden'); // إظهار زر Back Answer
 
-            // تحقق إذا كانت جميع الإجابات صحيحة لعرض الزينة
             if (score === quizData.length) {
                 showConfetti();
             } else {
@@ -163,20 +175,34 @@
             }
         }
 
+        function showAnswers() {
+            const feedbackContainer = document.getElementById('answer-feedback');
+            feedbackContainer.classList.remove('hidden');
+
+            answers.forEach((answer, index) => {
+                if (currentQuiz === index) {
+                    if (answer === quizData[index].correct) {
+                        document.getElementById('correct-mark').style.display = 'inline';
+                        document.getElementById('wrong-mark').style.display = 'none';
+                    } else {
+                        document.getElementById('correct-mark').style.display = 'none';
+                        document.getElementById('wrong-mark').style.display = 'inline';
+                    }
+                }
+            });
+        }
+
         function showConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.remove('hidden');
-
-            // إزالة أي زينة سابقة للتأكد من عدم وجود زينة غير مرغوب فيها
             confettiContainer.innerHTML = '';
 
-            // زيادة عدد عناصر الزينة إلى 200 لجعلها أكثر كثافة
             for (let i = 0; i < 200; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                confetti.style.left =` ${Math.random() * 100}%`;
+                confetti.style.left = `${Math.random() * 100}%`;
                 confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                confetti.style.animationDelay = `${Math.random() * 3}s`; // تأخير متنوع لظهور الزينة
+                confetti.style.animationDelay = `${Math.random() * 3}s`;
                 confettiContainer.appendChild(confetti);
             }
         }
@@ -184,7 +210,7 @@
         function hideConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.add('hidden');
-            confettiContainer.innerHTML = ''; // إزالة جميع عناصر الزينة
+            confettiContainer.innerHTML = '';
         }
 
         window.onload = async function () {
