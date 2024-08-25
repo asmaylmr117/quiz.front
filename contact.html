@@ -9,26 +9,20 @@
     <style>
         .confetti {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 12px; /* حجم الزينة */
+            height: 12px; /* حجم الزينة */
             background-color: red;
             animation: confetti-fall 5s linear infinite;
-            opacity: 0.8;
+            opacity: 0.8; /* جعل الزينة شبه شفافة */
         }
 
         @keyframes confetti-fall {
             0% {
-                transform: translateY(-100vh) rotate(0deg);
+                transform: translateY(-100vh) rotate(0deg); /* بداية من أعلى الصفحة */
             }
-
             100% {
                 transform: translateY(100vh) rotate(720deg);
             }
-        }
-
-        #correct-mark,
-        #wrong-mark {
-            display: none;
         }
     </style>
 </head>
@@ -36,39 +30,32 @@
 <body class="bg-blue-900 text-white min-h-screen flex justify-center items-center relative overflow-hidden">
     <div class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
         <div id="quiz" class="text-left"></div>
-        <div id="answer-feedback" class="mt-2 hidden">
-            <span id="correct-mark" class="text-green-500">&#10003;</span>
-            <span id="wrong-mark" class="text-red-500">&#10007;</span>
-        </div>
         <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
             <button id="back-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
                 onclick="loadPreviousQuestion()">Back</button>
             <button id="next-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
                 onclick="loadNextQuestion()">Next Question</button>
-            <button id="start-quiz-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            <button id="start-quiz-btn"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onclick="startQuiz()">Start Quiz</button>
-            <button id="back-answer-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
-                onclick="showPreviousAnswers()">Back Answer</button>
         </div>
     </div>
 
+    <!-- عناصر الزينة -->
     <div id="confetti-container" class="hidden"></div>
 
     <script>
         let quizData = [];
         let currentQuiz = 0;
         let answers = [];
-        let reviewingAnswers = false;  // متغير لتحديد حالة مراجعة الإجابات
 
         async function startQuiz() {
             currentQuiz = 0;
             answers = [];
-            reviewingAnswers = false;  // إعادة التعيين إلى الوضع الطبيعي
             await fetchQuizData();
             document.getElementById('start-quiz-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
             document.getElementById('back-btn').classList.remove('hidden');
-            document.getElementById('back-answer-btn').classList.add('hidden');
             loadQuiz();
         }
 
@@ -120,19 +107,9 @@
             } else {
                 document.getElementById('back-btn').classList.add('hidden');
             }
-
-            document.getElementById('answer-feedback').classList.add('hidden');
         }
 
         function loadNextQuestion() {
-            if (reviewingAnswers) {  // إذا كان في وضع مراجعة الإجابات
-                if (currentQuiz < quizData.length - 1) {
-                    currentQuiz++;
-                    showPreviousAnswers();
-                }
-                return;
-            }
-
             const selectedAnswer = document.querySelector('input[name="answer"]:checked');
             if (selectedAnswer) {
                 answers[currentQuiz] = selectedAnswer.value;
@@ -150,11 +127,7 @@
         function loadPreviousQuestion() {
             if (currentQuiz > 0) {
                 currentQuiz--;
-                if (reviewingAnswers) {
-                    showPreviousAnswers();
-                } else {
-                    loadQuiz();
-                }
+                loadQuiz();
             } else {
                 alert('There is no previous question.');
             }
@@ -181,8 +154,8 @@
             `;
             document.getElementById('next-btn').classList.add('hidden');
             document.getElementById('back-btn').classList.add('hidden');
-            document.getElementById('back-answer-btn').classList.remove('hidden'); // إظهار زر Back Answer بعد عرض النتائج
 
+            // تحقق إذا كانت جميع الإجابات صحيحة لعرض الزينة
             if (score === quizData.length) {
                 showConfetti();
             } else {
@@ -190,77 +163,37 @@
             }
         }
 
-        function showPreviousAnswers() {
-            reviewingAnswers = true;  // تفعيل وضع مراجعة الإجابات
-            const quiz = document.getElementById('quiz');
-            const feedbackContainer = document.getElementById('answer-feedback');
-
-            const currentQuizData = quizData[currentQuiz];
-            quiz.innerHTML = `
-                <h2>${currentQuizData.question}</h2>
-                <div class="space-y-2">
-                    <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="a" disabled ${answers[currentQuiz] === 'a' ? 'checked' : ''}>
-                        <span class="text-white">${currentQuizData.a}</span>
-                    </label>
-                    <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="b" disabled ${answers[currentQuiz] === 'b' ? 'checked' : ''}>
-                        <span class="text-white">${currentQuizData.b}</span>
-                    </label>
-                    <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="c" disabled ${answers[currentQuiz] === 'c' ? 'checked' : ''}>
-                        <span class="text-white">${currentQuizData.c}</span>
-                    </label>
-                    <label class="block">
-                        <input class="mr-2 leading-tight" type="radio" name="answer" value="d" disabled ${answers[currentQuiz] === 'd' ? 'checked' : ''}>
-                        <span class="text-white">${currentQuizData.d}</span>
-                    </label>
-                </div>
-            `;
-
-            // تحديد الإجابة الصحيحة
-            feedbackContainer.classList.remove('hidden');
-            if (answers[currentQuiz] === currentQuizData.correct) {
-                document.getElementById('correct-mark').style.display = 'inline';
-                document.getElementById('wrong-mark').style.display = 'none';
-            } else {
-                document.getElementById('correct-mark').style.display = 'none';
-                document.getElementById('wrong-mark').style.display = 'inline';
-            }
-
-            if (currentQuiz === 0) {
-                document.getElementById('back-btn').classList.add('hidden');
-            } else {
-                document.getElementById('back-btn').classList.remove('hidden');
-            }
-
-            if (currentQuiz === quizData.length - 1) {
-                document.getElementById('next-btn').classList.add('hidden');
-            } else {
-                document.getElementById('next-btn').classList.remove('hidden');
-            }
-        }
-
-        function exitQuiz() {
-            location.reload(); // إعادة تحميل الصفحة لإعادة تشغيل الاختبار من البداية
-        }
-
         function showConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
             confettiContainer.classList.remove('hidden');
-            for (let i = 0; i < 100; i++) {
+
+            // إزالة أي زينة سابقة للتأكد من عدم وجود زينة غير مرغوب فيها
+            confettiContainer.innerHTML = '';
+
+            // زيادة عدد عناصر الزينة إلى 200 لجعلها أكثر كثافة
+            for (let i = 0; i < 200; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * window.innerWidth + 'px';
-                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.left =` ${Math.random() * 100}%`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDelay = `${Math.random() * 3}s`; // تأخير متنوع لظهور الزينة
                 confettiContainer.appendChild(confetti);
             }
         }
 
         function hideConfetti() {
             const confettiContainer = document.getElementById('confetti-container');
-            confettiContainer.innerHTML = ''; // إزالة كل العناصر لإيقاف المؤثر
             confettiContainer.classList.add('hidden');
+            confettiContainer.innerHTML = ''; // إزالة جميع عناصر الزينة
+        }
+
+        window.onload = async function () {
+            await fetchQuizData();
+        };
+
+        function exitQuiz() {
+            window.close();
+            window.location.href = 'index.html';
         }
     </script>
 </body>
