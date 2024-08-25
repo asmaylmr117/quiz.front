@@ -66,6 +66,7 @@
             document.getElementById('start-quiz-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
             document.getElementById('back-btn').classList.remove('hidden');
+            document.getElementById('back-answer-btn').classList.add('hidden'); // إخفاء زر Back Answer عند بدء الاختبار
             loadQuiz();
         }
 
@@ -166,7 +167,7 @@
             `;
             document.getElementById('next-btn').classList.add('hidden');
             document.getElementById('back-btn').classList.add('hidden');
-            document.getElementById('back-answer-btn').classList.remove('hidden');
+            document.getElementById('back-answer-btn').classList.remove('hidden'); // إظهار زر Back Answer بعد عرض النتائج
 
             if (score === quizData.length) {
                 showConfetti();
@@ -179,23 +180,26 @@
             const quiz = document.getElementById('quiz');
             const feedbackContainer = document.getElementById('answer-feedback');
 
+            const currentQuizData = quizData[currentQuiz];
+
             quiz.innerHTML = `
-                <h2>${quizData[currentQuiz].question}</h2>
+                <h2>${currentQuizData.question}</h2>
                 <div class="space-y-2">
                     <label class="block">
                         <input class="mr-2 leading-tight" type="radio" name="answer" value="a" disabled ${answers[currentQuiz] === 'a' ? 'checked' : ''}>
-                        <span class="text-white">${quizData[currentQuiz].a}</span>
+                        <span class="text-white">${currentQuizData.a}</span>
                     </label>
                     <label class="block">
                         <input class="mr-2 leading-tight" type="radio" name="answer" value="b" disabled ${answers[currentQuiz] === 'b' ? 'checked' : ''}>
-                        <span class="text-white">${quizData[currentQuiz].b}</span>
+                        <span class="text-white">${currentQuizData.b}</span>
                     </label>
                     <label class="block">
                         <input class="mr-2 leading-tight" type="radio" name="answer" value="c" disabled ${answers[currentQuiz] === 'c' ? 'checked' : ''}>
-                        <span class="text-white">${quizData[currentQuiz].c}</span>
-                    </label><label class="block">
+                        <span class="text-white">${currentQuizData.c}</span>
+                    </label>
+                    <label class="block">
                         <input class="mr-2 leading-tight" type="radio" name="answer" value="d" disabled ${answers[currentQuiz] === 'd' ? 'checked' : ''}>
-                        <span class="text-white">${quizData[currentQuiz].d}</span>
+                        <span class="text-white">${currentQuizData.d}</span>
                     </label>
                 </div>
             `;
