@@ -48,7 +48,7 @@
             <button id="start-quiz-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 onclick="startQuiz()">Start Quiz</button>
             <button id="back-answer-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden"
-                onclick="showAnswers()">Back Answer</button>
+                onclick="showPreviousAnswers()">Back Answer</button>
         </div>
     </div>
 
@@ -118,7 +118,7 @@
                 document.getElementById('back-btn').classList.add('hidden');
             }
 
-            document.getElementById('answer-feedback').classList.add('hidden'); // إخفاء العلامات عند تحميل سؤال جديد
+            document.getElementById('answer-feedback').classList.add('hidden');
         }
 
         function loadNextQuestion() {
@@ -166,7 +166,7 @@
             `;
             document.getElementById('next-btn').classList.add('hidden');
             document.getElementById('back-btn').classList.add('hidden');
-            document.getElementById('back-answer-btn').classList.remove('hidden'); // إظهار زر Back Answer
+            document.getElementById('back-answer-btn').classList.remove('hidden');
 
             if (score === quizData.length) {
                 showConfetti();
@@ -175,21 +175,41 @@
             }
         }
 
-        function showAnswers() {
+        function showPreviousAnswers() {
+            const quiz = document.getElementById('quiz');
             const feedbackContainer = document.getElementById('answer-feedback');
-            feedbackContainer.classList.remove('hidden');
 
-            answers.forEach((answer, index) => {
-                if (currentQuiz === index) {
-                    if (answer === quizData[index].correct) {
-                        document.getElementById('correct-mark').style.display = 'inline';
-                        document.getElementById('wrong-mark').style.display = 'none';
-                    } else {
-                        document.getElementById('correct-mark').style.display = 'none';
-                        document.getElementById('wrong-mark').style.display = 'inline';
-                    }
-                }
-            });
+            quiz.innerHTML = `
+                <h2>${quizData[currentQuiz].question}</h2>
+                <div class="space-y-2">
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="a" disabled ${answers[currentQuiz] === 'a' ? 'checked' : ''}>
+                        <span class="text-white">${quizData[currentQuiz].a}</span>
+                    </label>
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="b" disabled ${answers[currentQuiz] === 'b' ? 'checked' : ''}>
+                        <span class="text-white">${quizData[currentQuiz].b}</span>
+                    </label>
+                    <label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="c" disabled ${answers[currentQuiz] === 'c' ? 'checked' : ''}>
+                        <span class="text-white">${quizData[currentQuiz].c}</span>
+                    </label><label class="block">
+                        <input class="mr-2 leading-tight" type="radio" name="answer" value="d" disabled ${answers[currentQuiz] === 'd' ? 'checked' : ''}>
+                        <span class="text-white">${quizData[currentQuiz].d}</span>
+                    </label>
+                </div>
+            `;
+
+            // عرض علامة صح أو خطأ بناءً على الإجابة
+            if (answers[currentQuiz] === quizData[currentQuiz].correct) {
+                feedbackContainer.classList.remove('hidden');
+                document.getElementById('correct-mark').style.display = 'inline';
+                document.getElementById('wrong-mark').style.display = 'none';
+            } else {
+                feedbackContainer.classList.remove('hidden');
+                document.getElementById('correct-mark').style.display = 'none';
+                document.getElementById('wrong-mark').style.display = 'inline';
+            }
         }
 
         function showConfetti() {
