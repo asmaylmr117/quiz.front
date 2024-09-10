@@ -11,62 +11,86 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-color: black;
-            overflow: hidden;
-        }
-        
-        h1 {
-            background: linear-gradient(90deg, #db2461, #64d9ee);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 11vw;
-            text-align: center;
-            margin-top: 8vh;
-        }
+    background-color: black;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* لتجنب المساحات الفارغة */
+    padding: 0;
+    margin: 0;
+}
 
-        h2 {
-            background: linear-gradient(90deg, #db2461, #64d9ee);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 6vw;
-            text-align: center;
-            margin-bottom: 8vh;
-        }
+h1, h2 {
+    background: linear-gradient(90deg, #db2461, #64d9ee);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
 
-        .custom-input {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            font-size: 1.2em;
-            border-radius: 5px;
-            border: 1px solid #bd0707;
-            text-align: center;
-            width: 100%; /* تعديل لجعل العرض مرنًا */
-            max-width: 400px;
-            margin: 0 auto 40px auto;
-            /* إزالة القيم التي تؤثر على الاستجابة */
-        }
+h1 {
+    font-size: 11vw;
+    margin-top: 5vh; /* تقليل المسافة العلوية */
+}
 
-        .custom-button {
-            background-color: rgba(28, 236, 236, 0.5);
-            font-size: 1.2em;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            color: #fff;
-            transition: background-color 0.3s ease;
-            width: 190px;
-            max-width: 160px;
-            position: relative;
-            top: -20px;
-        }
+h2 {
+    font-size: 6vw;
+    margin-bottom: 5vh; /* تقليل المسافة السفلية */
+}
 
-        .custom-button:hover {
-            background-color: #00ffff;
-        }
+.custom-input {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 1px solid #bd0707;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 30px auto;
+}
 
+.custom-button {
+    background-color: rgba(28, 236, 236, 0.5);
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    width: 190px;
+    max-width: 160px;
+}
+
+/* استهداف الشاشات الصغيرة */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 24vw; /* تقليل حجم النص */
+        margin-top: 8vh; /* تقليل المسافة العلوية */
+        margin-bottom: 4vh;
+    }
+
+    h2 {
+        font-size: 10vw; /* تقليل حجم النص */
+       
+        margin-top: 0;
+        margin-bottom: 2vh; /* تقليل المسافة السفلية */
+    }
+
+    .custom-input {
+        font-size: 1em;
+        padding: 8px; /* تقليل الحشو في الحقول */
+        margin-bottom: 20px; /* تقليل المسافة السفلية */
+    }
+
+    .custom-button {
+        padding: 8px 16px; /* تصغير حجم الزر قليلاً */
+        width: 160px; /* تقليل العرض */
+    }
+}
         .question-mark {
             font-size: 2rem;
             position: absolute;
@@ -86,28 +110,7 @@
             100% { transform: translateY(0); }
         }
 
-        #developer-section {
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #220de26b;
-            display: none;
-            text-align: right;
-            max-width: 50%;
-            margin: 10px auto;
-            width: 50%;
-            position: relative;
-        }
-       #about-app-section {
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #220de26b;
-            display: none;
-            text-align: right;
-            max-width: 80%;
-            margin: 10px auto;
-            width: 100%;
-            position: relative;
-        }
+       
 
         .icon-link {
             display: inline-block;
@@ -128,15 +131,6 @@
             height: auto;
         }
 
-        #developer-btn, #about-app-btn {
-            color: #154de9;
-            background-color: #c7d0d6d5;
-            margin: 10px;
-        }
-
-        #developer-btn:hover, #about-app-btn:hover {
-            background-color: #f3e9e975;
-        }
 
         p {
             color: white;
@@ -225,45 +219,13 @@
     </script>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen relative">
-    <div class="flex justify-center items-center space-x-4">
-        <button id="developer-btn" class="custom-button">Developer</button>
-        <button id="about-app-btn" class="custom-button">About App</button>
-    </div>
-
-    <div id="developer-section">
-        <img src="mostafa.PNG" alt="شعار" class="logo">
-        <a href="https://www.facebook.com/mostafa.enani.71" target="_blank" class="icon-link">
-            <i class="fab fa-facebook"></i> Facebook
-        </a>
-        <a href="https://github.com/asmaylmr117" target="_blank" class="icon-link">
-            <i class="fab fa-github"></i> GitHub
-        </a>
-        <a href="https://wa.me/+201066915691" target="_blank" class="icon-link">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        <a href="https://www.linkedin.com/in/mostafa-enany-657228259?trk=contact-info" target="_blank" class="icon-link">
-            <i class="fab fa-linkedin"></i> LinkedIn
-        </a>
-    </div>
-
-    <div id="about-app-section">
-        <p>This quiz app application depends on:
-            <br>1 - Admin: responsible for adding questions and has a unique name to access the add questions page.
-            <img src="admin.PNG" class="mo" style="border: 2px solid rgba(37, 56, 224, 0.301);">
-            <br>2 - Users: tested with questions added by the admin, and their results are displayed after completing the answers.
-        </p>
-        <div class="flex justify-center space-x-4 mt-4">
-            <img src="users.PNG" class="w-20 h-auto">
-            <img src="users.1.PNG" class="w-20 h-auto">
-            <img src="users.2.PNG" class="w-20 h-auto">
-        </div>
-    </div>
-
-    <h1>QuizTime</h1>
-    <h2>Welcome, Good luck</h2>
+   
+   <div> <h1>QuizTime</h1></div>
+    <div><h2>Welcome, Good luck</h2></div>
     <div class="w-full max-w-xs">
         <input type="text" id="nameInput" class="custom-input" placeholder="Enter your name">
     </div>
-    <button class="custom-button" onclick="validateInput()">Login</button>
+    <div><button class="custom-button" onclick="validateInput()">Login</button></div>
+
 </body>
-</html>l>
+</html>
